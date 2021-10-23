@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.dao.UserMapper">
+
+    <resultMap id="UR" type="user">
+        <!--一对一 查出 角色-->
+        <result property="userRoleName" column="roleName"/>
+    </resultMap>
+
+    <select id="getLoginUser" resultMap="UR">
+        select * from smbms_user u, smbms_role r where userCode = #{userCode} and u.userRole=r.id
+    </select>
+
+    <insert id="add" parameterType="user">
+        insert  into smbms_user(id,userCode,userName,userPassword,gender,birthday,
+            phone,address,userRole,createdBy,creationDate,modifyBy,modifyDate)
+        values (#{id},#{userCode},#{userName},#{userPassword},#{gender},#{birthday},
+        #{phone},#{address},#{userRole},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate})
+    </insert>
+
+    <select id="getUserList" resultType="user">
+        SELECT * FROM smbms_user where userName=#{userName} and userRole=#{userRole}
+        LIMIT #{PageNo},#{PageSize}
+    </select>
+
+    <select id="getUserCount" resultType="int">
+        SELECT count(*) FROM smbms_user where userName=#{userName} and userRole=#{userRole}
+    </select>
+
+    <delete id="deleteUserById">
+        DELETE from smbms_user where id=#{delId}
+    </delete>
+
+    <select id="getUserById" resultType="user">
+        select * from smbms_user
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <update id="modify" parameterType="user">
+        update smbms_user
+        <set>
+            <if test="phone!=null">
+                phone = #{phone},
+            </if>
+            <if test="address!=null">
+                address = #{address},
+            </if>
+            <if test="userPassword!=null">
+                userPassword = #{userPassword}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

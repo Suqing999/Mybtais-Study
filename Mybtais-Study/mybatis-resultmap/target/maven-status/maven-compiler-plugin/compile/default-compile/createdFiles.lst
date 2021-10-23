@@ -1,0 +1,3 @@
+com\baidu\dao\UserMapper.class
+com\baidu\utils\MybatisUtils.class
+com\baidu\pojo\User.class

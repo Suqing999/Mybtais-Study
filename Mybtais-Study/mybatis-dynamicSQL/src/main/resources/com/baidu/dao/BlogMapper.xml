@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.dao.BlogMapper">
+    <select id="selectBlogIF" parameterType="map" resultType="blog">
+        select * from blog where  1=1
+        <if test="title!=null">
+            AND title = #{title}
+        </if>
+        <if test="author!=null">
+            AND author = #{author}
+        </if>
+        <if test="author==null and title==null">
+            AND 1=0
+        </if>
+    </select>
+
+    <select id="selectBlogChoose" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <choose>
+                <when test="title!=null">
+                    title=#{title}
+                </when>
+                <when test="author!=null">
+                    author=#{author}
+                </when>
+                <otherwise>
+                    1=0
+                </otherwise>
+            </choose>
+        </where>
+
+    </select>
+
+   <!-- update blog set id#{id},xx=xx where xxx=xxx-->
+    <update id="updateBlog" parameterType="map">
+        update blog
+        <set>
+            <if test="title!=null">
+                title = #{title},
+            </if>
+            <if test="author!=null">
+                author = #{author}
+            </if>
+            <if test="author==null and title==null"> /*如果啥也没有就用id替代*/
+                id=#{id}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+    <select id="selectBlogForeach" resultType="blog">
+        select * from blog where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

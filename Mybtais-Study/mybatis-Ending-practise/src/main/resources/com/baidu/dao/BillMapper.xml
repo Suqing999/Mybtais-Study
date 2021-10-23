@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.dao.BillMapper">
+
+    <resultMap id="BP" type="bill">
+        <result property="providerName" column="proName"/>
+    </resultMap>
+
+    <select id="getBillList" parameterType="bill" resultMap="BP">
+        select * from smbms_bill bill,smbms_provider p
+        <where>
+            <if test="productName!=null">
+                productName like #{productName}
+            </if>
+            <if test="productDesc!=null">
+                and productDesc like #{productDesc}
+            </if>
+
+            and bill.providerId = p.id
+        </where>
+
+    </select>
+</mapper>
